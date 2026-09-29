@@ -410,4 +410,16 @@ Frontend interaction test:
 Test Files: 1 passed
 Tests: 1 passed
 
+### Backend
+
+Inside the backend folder:
+
+```bash
+npm run build
 The tests verify workspace isolation, duplicate conversion prevention and a frontend login interaction.
+### Frontend
+
+Inside the frontend folder:
+
+```bash
+npm run build
