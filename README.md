@@ -8,22 +8,22 @@ The application allows local businesses to manage customer requests, update requ
 
 ## Features
 
-- Workspace-aware request management
-- JWT-based authentication
-- Create customer requests
-- View request details
-- Edit customer requests
-- Filter requests by status
-- Request activity timeline
-- Convert QUALIFIED requests into work items
-- Human confirmation before conversion
-- Duplicate conversion prevention
-- Workspace isolation
-- Input validation
-- API error handling
-- Responsive frontend
-- Backend automated tests
-- Frontend interaction test
+* Workspace-aware request management
+* JWT-based authentication
+* Create customer requests
+* View request details
+* Edit customer requests
+* Filter requests by status
+* Request activity timeline
+* Convert QUALIFIED requests into work items
+* Human confirmation before conversion
+* Duplicate conversion prevention
+* Workspace isolation
+* Input validation
+* API error handling
+* Responsive frontend
+* Backend automated tests
+* Frontend interaction test
 
 ---
 
@@ -31,27 +31,27 @@ The application allows local businesses to manage customer requests, update requ
 
 ### Frontend
 
-- React
-- TypeScript
-- Vite
-- React Testing Library
-- Vitest
+* React
+* TypeScript
+* Vite
+* React Testing Library
+* Vitest
 
 ### Backend
 
-- Node.js
-- Express
-- TypeScript
-- JWT
-- bcryptjs
-- SQLite
-- better-sqlite3
+* Node.js
+* Express
+* TypeScript
+* JWT
+* bcryptjs
+* SQLite
+* better-sqlite3
 
 ### Testing
 
-- Vitest
-- Supertest
-- React Testing Library
+* Vitest
+* Supertest
+* React Testing Library
 
 ---
 
@@ -70,7 +70,6 @@ client-request-desk/
 │   ├── tests/
 │   │   └── request.test.ts
 │   │
-│   ├── .env
 │   ├── .env.example
 │   └── package.json
 │
@@ -85,13 +84,15 @@ client-request-desk/
 │   └── package.json
 │
 └── README.md
+```
 
+---
 
-//
-Architecture
+## Architecture
 
 The project uses a simple frontend-backend architecture.
 
+```text
 React Frontend
       |
       | HTTP / REST API
@@ -100,6 +101,7 @@ Node.js + Express Backend
       |
       ↓
 SQLite Database
+```
 
 The frontend communicates with the backend using REST APIs.
 
@@ -109,14 +111,17 @@ The JWT contains the authenticated user's ID and workspace ID.
 
 The backend uses the workspace ID from the authenticated token when accessing request data.
 
-Workspace Isolation
+---
+
+## Workspace Isolation
 
 Workspace isolation is enforced on the backend.
 
 Every request belongs to a workspace.
 
-For example:
+Example:
 
+```text
 Workspace 1
     ├── User 1
     └── Customer Requests
@@ -124,24 +129,30 @@ Workspace 1
 Workspace 2
     ├── User 2
     └── Customer Requests
+```
 
 Request queries always use the authenticated user's workspace ID.
 
 Example:
 
+```sql
 WHERE id = ? AND workspace_id = ?
+```
 
 This prevents a user from accessing another workspace's request by manually changing the request ID.
 
-The backend also applies workspace checks during:
+The backend applies workspace checks during:
 
-Request listing
-Request details
-Request creation
-Request update
-Work item conversion
-Activity retrieval
-Authentication
+* Request listing
+* Request details
+* Request creation
+* Request update
+* Work item conversion
+* Activity retrieval
+
+---
+
+## Authentication
 
 The application uses JWT authentication.
 
@@ -151,275 +162,394 @@ The backend verifies the password and returns a JWT token.
 
 The frontend stores the token and sends it with protected API requests:
 
+```text
 Authorization: Bearer <token>
+```
 
 Protected request APIs require a valid JWT.
 
-Request Statuses
+---
+
+## Request Statuses
 
 The application supports three request statuses:
 
+```text
 NEW
 QUALIFIED
 CLOSED
+```
 
-Only QUALIFIED requests can be converted into work items.
+Only `QUALIFIED` requests can be converted into work items.
 
-After successful conversion, the request status becomes CLOSED.
+After successful conversion, the request status becomes `CLOSED`.
 
-Request Conversion
+---
+
+## Request Conversion
 
 The conversion flow requires human confirmation.
 
 Before conversion, the frontend displays:
 
-Customer name
-Requested service
-Scheduled date
+* Customer name
+* Requested service
+* Scheduled date
 
 The user must click:
 
+```text
 Confirm Conversion
+```
 
 before the conversion API is called.
 
-The backend also validates that the request is QUALIFIED.
+The backend also validates that the request is `QUALIFIED`.
 
-A database-level unique constraint on request_id prevents multiple work items from being created for the same request.
+A database-level unique constraint on `request_id` prevents multiple work items from being created for the same request.
 
 An activity record is created when the conversion succeeds.
 
-Database
+---
+
+## Database
 
 SQLite is used for this assignment.
 
 Main tables:
 
-workspaces
-users
-customer_requests
-work_items
-activities
+* `workspaces`
+* `users`
+* `customer_requests`
+* `work_items`
+* `activities`
 
 Relationships are protected using foreign keys.
 
-The work_items.request_id field has a unique constraint to prevent duplicate work items.
+The `work_items.request_id` field has a unique constraint to prevent duplicate work items.
 
-Seed Data
+---
+
+## Seed Data
 
 The project contains sample data for two workspaces.
 
-Workspace 1
+### Workspace 1
+
+```text
 Workspace: ABC Plumbing
 User: Rohit
 Email: rohit@abcplumbing.com
 Password: password123
-Workspace 2
+```
+
+### Workspace 2
+
+```text
 Workspace: XYZ Plumbing
 User: Amit
 Email: amit@xyzplumbing.com
 Password: password123
+```
 
 Sample customer requests are included for both workspaces.
 
-Environment Variables
+---
 
-Create a .env file inside the backend folder.
+## Environment Variables
+
+Create a `.env` file inside the backend folder.
 
 Example:
 
+```env
 PORT=5000
 JWT_SECRET=your_secret_here
+```
 
-A .env.example file is included in the project:
+A `.env.example` file is included in the project:
 
+```env
 PORT=5000
 JWT_SECRET=change_this_secret
+```
 
 Never commit real secrets to source control.
 
-Installation
-Backend
+---
 
-Open terminal inside the backend folder:
+# Installation
 
+## Backend
+
+Open a terminal inside the `backend` folder:
+
+```bash
 npm install
+```
 
 Run the database seed:
 
+```bash
 npm run seed
+```
 
 Start the backend:
 
+```bash
 npm run dev
+```
 
 Backend runs on:
 
+```text
 http://localhost:5000
-Frontend
+```
 
-Open another terminal inside the frontend folder:
+## Frontend
 
+Open another terminal inside the `frontend` folder:
+
+```bash
 npm install
+```
 
 Start the frontend:
 
+```bash
 npm run dev
+```
 
 Open the URL shown by Vite in the terminal.
 
-Testing
-Backend Tests
+---
+
+# Testing
+
+## Backend Tests
 
 Inside the backend folder:
 
+```bash
 npm test
+```
 
 Backend tests cover:
 
-Cross-workspace access prevention
-Duplicate conversion prevention
-Frontend Test
+* Cross-workspace access prevention
+* Duplicate conversion prevention
+
+## Frontend Test
 
 Inside the frontend folder:
 
+```bash
 npm test
+```
 
 The frontend test covers the login interaction.
 
-Production Build
-Frontend
+---
+
+# Production Build
+
+## Backend
+
+Inside the backend folder:
+
+```bash
+npm run build
+```
+
+This compiles the backend TypeScript code into the `dist` folder.
+
+## Frontend
 
 Inside the frontend folder:
 
+```bash
 npm run build
+```
 
 This creates the production build using Vite.
 
-API Endpoints
-Authentication
+---
+
+# API Endpoints
+
+## Authentication
+
+```text
 POST /api/auth/login
-Requests
+```
+
+## Requests
+
+```text
 GET    /api/requests
 GET    /api/requests/:id
 POST   /api/requests
 PUT    /api/requests/:id
 POST   /api/requests/:id/convert
-Validation and Error Handling
+```
+
+---
+
+# Validation and Error Handling
 
 The backend validates:
 
-Required request fields
-Request status values
-Request IDs
-Authentication tokens
-Workspace access
-Request conversion status
+* Required request fields
+* Request status values
+* Request IDs
+* Authentication tokens
+* Workspace access
+* Request conversion status
 
 Useful HTTP status codes are returned for errors:
 
+```text
 400 Bad Request
 401 Unauthorized
 404 Not Found
 409 Conflict
 500 Internal Server Error
-Key Decisions
-SQLite
+```
+
+---
+
+# Key Decisions
+
+## SQLite
 
 SQLite was selected because it is lightweight and easy to run locally for the assignment.
 
-JWT Authentication
+## JWT Authentication
 
 JWT provides a simple way to identify the authenticated user and workspace for protected API requests.
 
-Backend Workspace Enforcement
+## Backend Workspace Enforcement
 
 Workspace isolation is enforced on the backend rather than relying only on the frontend.
 
 This prevents users from bypassing the UI and accessing another workspace by manually changing an ID.
 
-Database Unique Constraint
+## Database Unique Constraint
 
-The work_items.request_id field is unique so the database also protects against duplicate work items.
+The `work_items.request_id` field is unique so the database also protects against duplicate work items.
 
-Assumptions
-Each user belongs to one workspace.
-A request belongs to exactly one workspace.
-A request can have only one work item.
-Only QUALIFIED requests can be converted.
-SQLite is sufficient for this assignment's local environment.
-JWT authentication is sufficient for the demonstration application.
-Trade-offs
-SQLite instead of PostgreSQL
+---
+
+# Assumptions and Trade-offs
+
+## Assumptions
+
+* Each user belongs to one workspace.
+* A request belongs to exactly one workspace.
+* A request can have only one work item.
+* Only `QUALIFIED` requests can be converted.
+* SQLite is sufficient for this assignment's local environment.
+* JWT authentication is sufficient for the demonstration application.
+
+## Trade-offs
+
+### SQLite instead of PostgreSQL
 
 SQLite keeps the project simple and easy to run locally.
 
 For a larger production system, PostgreSQL would provide stronger concurrency and scalability options.
 
-Simple JWT Authentication
+### Simple JWT Authentication
 
 The authentication implementation is intentionally lightweight for the assignment.
 
 A production system could add refresh tokens, password reset, email verification and stronger authentication controls.
 
-Simple React State Management
+### Simple React State Management
 
 The frontend uses React state instead of a dedicated state-management library.
 
 This keeps the application smaller and easier to understand for the current scope.
 
-Future Improvements
+---
 
-Possible future improvements include:
+# Future Improvements
 
-PostgreSQL support
-Role-based access control
-Refresh tokens
-Pagination
-Search functionality
-Better audit logging
-Automated API documentation
-More frontend tests
-More detailed activity history
-Production deployment
-CI/CD pipeline
-Improved authentication and security controls
-AI Tools Used
+With more development time, I would improve the application by adding:
+
+* PostgreSQL support
+* Role-based access control
+* Refresh tokens
+* Pagination
+* Search functionality
+* Better audit logging
+* Automated API documentation
+* More frontend tests
+* More detailed activity history
+* Production deployment
+* CI/CD pipeline
+* Improved authentication and security controls
+* Structured logging and production monitoring
+
+---
+
+# AI Tools Used
 
 AI assistance was used during development for:
 
-Understanding assignment requirements
-Debugging TypeScript and configuration issues
-Structuring backend APIs
-Creating test cases
-Improving frontend interaction handling
-Reviewing workspace isolation logic
-Preparing project documentation
+* Understanding assignment requirements
+* Debugging TypeScript and configuration issues
+* Structuring backend APIs
+* Creating test cases
+* Improving frontend interaction handling
+* Reviewing workspace isolation logic
+* Preparing project documentation
 
-All generated code was reviewed and tested manually before being included in the project.
+All generated suggestions and code were reviewed and tested manually before being included in the project.
 
-Test Results
+The implementation was verified by:
 
-Backend automated tests:
+* Running the backend and frontend locally
+* Testing APIs through Postman
+* Testing the frontend login and request flow
+* Testing workspace isolation
+* Testing duplicate conversion prevention
+* Running backend automated tests
+* Running frontend interaction tests
+* Running production builds
 
+---
+
+# Test Results
+
+## Backend Automated Tests
+
+```text
 Test Files: 1 passed
 Tests: 2 passed
+```
 
-Frontend interaction test:
+## Frontend Interaction Test
 
+```text
 Test Files: 1 passed
 Tests: 1 passed
+```
 
-### Backend
+---
 
-Inside the backend folder:
+# Demo Credentials
 
-```bash
-npm run build
-The tests verify workspace isolation, duplicate conversion prevention and a frontend login interaction.
-### Frontend
+## Workspace 1
 
-Inside the frontend folder:
+```text
+Email: rohit@abcplumbing.com
+Password: password123
+```
 
-```bash
-npm run build
+## Workspace 2
+
+```text
+Email: amit@xyzplumbing.com
+Password: password123
+```
