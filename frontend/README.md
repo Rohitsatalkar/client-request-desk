@@ -73,3 +73,5 @@ export default defineConfig([
 ])
 
 ```
+
+Project documentation updated.
